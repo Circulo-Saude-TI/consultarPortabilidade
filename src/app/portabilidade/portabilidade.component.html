@@ -1,0 +1,46 @@
+<div class="page">
+  <header class="hero">
+    <div class="hero__content">
+      <div class="hero__logo" aria-hidden="true">
+        <img src="/assets/logo.svg" alt="Logo Círculo" />
+      </div>
+      <div class="hero__text">
+        <p class="hero__eyebrow">Serviços Online</p>
+        <h1>Portabilidade</h1>
+        <p class="hero__subtitle">Informe os dados para consultar a portabilidade.</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="form-wrapper">
+    <section class="card">
+      <form [formGroup]="portabilidadeForm" (ngSubmit)="onSubmit()" novalidate>
+        <div class="field">
+          <label for="cpfCnpj">CPF/CNPJ *</label>
+          <input
+            id="cpfCnpj"
+            type="text"
+            formControlName="cpfCnpj"
+            inputmode="numeric"
+            autocomplete="off"
+            placeholder="Digite o CPF ou CNPJ"
+          />
+          <p class="hint">Use apenas números.</p>
+          <p class="error" *ngIf="cpfCnpj?.invalid && submitted">Informe um CPF ou CNPJ válido.</p>
+        </div>
+
+        <div class="actions">
+          <button type="submit" [disabled]="portabilidadeForm.invalid || loading">
+            {{ loading ? 'Gerando...' : 'Enviar' }}
+          </button>
+          <span class="required-note">* Campos obrigatórios</span>
+        </div>
+
+        <div class="status" *ngIf="errorMsg || successMsg">
+          <p class="error" *ngIf="errorMsg">{{ errorMsg }}</p>
+          <p class="success" *ngIf="successMsg">{{ successMsg }}</p>
+        </div>
+      </form>
+    </section>
+  </main>
+</div>
