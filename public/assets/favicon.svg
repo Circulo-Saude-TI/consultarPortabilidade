@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <defs>
+    <style>
+      .petal { fill: #ffffff; opacity: 0.95; }
+      .center { fill: #ffffff; }
+    </style>
+  </defs>
+
+  <!-- Círculo de fundo laranja -->
+  <rect width="120" height="120" fill="#f7941d" rx="20"/>
+
+  <!-- Pétalas superior, inferior, esquerda, direita -->
+  <circle class="petal" cx="60" cy="28" r="14" />
+  <circle class="petal" cx="92" cy="60" r="14" />
+  <circle class="petal" cx="60" cy="92" r="14" />
+  <circle class="petal" cx="28" cy="60" r="14" />
+
+  <!-- Pétalas diagonais -->
+  <circle class="petal" cx="78" cy="38" r="12" />
+  <circle class="petal" cx="82" cy="82" r="12" />
+  <circle class="petal" cx="38" cy="82" r="12" />
+  <circle class="petal" cx="38" cy="38" r="12" />
+
+  <!-- Centro -->
+  <circle class="center" cx="60" cy="60" r="12" />
+</svg>
