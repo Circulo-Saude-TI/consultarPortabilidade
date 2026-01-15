@@ -58,6 +58,14 @@ export class PortabilidadeComponent {
       });
   }
 
+  protected blockNonNumeric(event: KeyboardEvent): void {
+    const allowedKeys = ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete', 'Home', 'End'];
+
+    if (event.ctrlKey || event.metaKey) return; // allow copy/paste and shortcuts
+    if (allowedKeys.includes(event.key)) return;
+    if (!/^\d$/.test(event.key)) event.preventDefault();
+  }
+
   protected get cpfCnpj() {
     return this.portabilidadeForm.get('cpfCnpj');
   }

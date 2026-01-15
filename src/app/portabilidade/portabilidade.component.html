@@ -22,6 +22,9 @@
             type="text"
             formControlName="cpfCnpj"
             inputmode="numeric"
+            pattern="[0-9]*"
+            maxlength="18"
+            (keydown)="blockNonNumeric($event)"
             autocomplete="off"
             placeholder="Digite o CPF ou CNPJ"
           />
@@ -30,7 +33,7 @@
         </div>
 
         <div class="actions">
-          <button type="submit" [disabled]="portabilidadeForm.invalid || loading">
+          <button type="submit" >
             {{ loading ? 'Gerando...' : 'Enviar' }}
           </button>
           <span class="required-note">* Campos obrigatórios</span>
