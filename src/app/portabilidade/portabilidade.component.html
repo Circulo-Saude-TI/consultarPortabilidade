@@ -12,6 +12,10 @@
     </div>
   </header>
 
+  <div class="toast" *ngIf="showToast" [class.toast--success]="toastType === 'success'" [class.toast--error]="toastType === 'error'">
+    {{ toastMessage }}
+  </div>
+
   <main class="form-wrapper">
     <section class="card">
       <form [formGroup]="portabilidadeForm" (ngSubmit)="onSubmit()" novalidate>

@@ -26,6 +26,9 @@ export class PortabilidadeComponent {
   protected loading = false;
   protected errorMsg = '';
   protected successMsg = '';
+  protected showToast = false;
+  protected toastMessage = '';
+  protected toastType: 'success' | 'error' = 'success';
 
   constructor() {
     this.cpfCnpj?.valueChanges.subscribe((value) => {
@@ -42,6 +45,7 @@ export class PortabilidadeComponent {
     this.submitted = true;
     this.errorMsg = '';
     this.successMsg = '';
+    this.showToast = false;
 
     if (this.portabilidadeForm.invalid) return;
 
@@ -51,7 +55,12 @@ export class PortabilidadeComponent {
     void this.processDeclaracao(cpfCnpj)
       .catch((err) => {
         console.error(err);
-        this.errorMsg = 'Não foi possível gerar a carta. Tente novamente.';
+        this.toastMessage = 'Não foi possível gerar a carta. Tente novamente.';
+        this.toastType = 'error';
+        this.showToast = true;
+        setTimeout(() => {
+          this.showToast = false;
+        }, 4000);
       })
       .finally(() => {
         this.loading = false;
@@ -93,21 +102,44 @@ export class PortabilidadeComponent {
     try {
       const declaracaoId = await this.portabilidadeService.listarDeclaracao(chaveUnica);
       if (!declaracaoId) {
-        this.errorMsg = 'Nenhuma declaração encontrada para este CPF/CNPJ.';
+        this.toastMessage = 'Nenhuma declaração encontrada para este CPF/CNPJ.';
+        this.toastType = 'error';
+        this.showToast = true;
+        setTimeout(() => {
+          this.showToast = false;
+        }, 4000);
         return;
       }
 
       const base64 = await this.portabilidadeService.obterDeclaracaoPdf(chaveUnica, declaracaoId);
       if (!base64) {
-        this.errorMsg = 'Falha ao obter o documento.';
+        this.toastMessage = 'Falha ao obter o documento.';
+        this.toastType = 'error';
+        this.showToast = true;
+        setTimeout(() => {
+          this.showToast = false;
+        }, 4000);
         return;
       }
 
       this.baixarBase64(base64, 'carta-portabilidade.rtf', 'application/rtf');
-      this.successMsg = 'Carta gerada com sucesso. O download deve iniciar em instantes.';
+      this.toastMessage = 'Carta gerada com sucesso!';
+      this.toastType = 'success';
+      this.showToast = true;
+
+      setTimeout(() => {
+        this.showToast = false;
+        this.portabilidadeForm.reset();
+        this.submitted = false;
+      }, 3000);
     } catch (error) {
       console.error(error);
-      this.errorMsg = 'Erro ao processar a declaração.';
+      this.toastMessage = 'Erro ao processar a declaração.';
+      this.toastType = 'error';
+      this.showToast = true;
+      setTimeout(() => {
+        this.showToast = false;
+      }, 4000);
     }
   }
 
@@ -129,7 +161,12 @@ export class PortabilidadeComponent {
       URL.revokeObjectURL(url);
     } catch (error) {
       console.error(error);
-      this.errorMsg = 'Erro ao baixar o arquivo.';
+      this.toastMessage = 'Erro ao baixar o arquivo.';
+      this.toastType = 'error';
+      this.showToast = true;
+      setTimeout(() => {
+        this.showToast = false;
+      }, 4000);
     }
   }
 }
