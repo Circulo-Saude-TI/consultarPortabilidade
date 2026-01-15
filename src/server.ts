@@ -16,8 +16,13 @@ const angularApp = new AngularNodeAppEngine();
 app.use(express.json());
 
 // Configuração segura carregada do .env (não exposta no cliente)
-const API_BASE_URL = process.env['API_BASE_URL'] || 'https://circulooperario192206.datasul.cloudtotvs.com.br/api/appMobileSaude/v1/cartaPortabilidade';
-const AUTH_TOKEN = process.env['API_AUTH_TOKEN'] || 'YXBwOkMzRE5JQmpVaHVTVg==';
+const API_BASE_URL = process.env['API_BASE_URL'];
+const AUTH_TOKEN = process.env['API_AUTH_TOKEN'];
+
+if (!API_BASE_URL || !AUTH_TOKEN) {
+  console.error('❌ Erro: API_BASE_URL ou API_AUTH_TOKEN não configurados no .env');
+  process.exit(1);
+}
 
 /**
  * Endpoint seguro para listar declarações
