@@ -18,7 +18,7 @@ export class PortabilidadeComponent {
   protected readonly portabilidadeForm = this.fb.group({
     cpfCnpj: [
       '',
-      [Validators.required, Validators.minLength(11), Validators.maxLength(18)]
+      [Validators.required]
     ]
   });
 
