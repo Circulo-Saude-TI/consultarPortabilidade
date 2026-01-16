@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { catchError, firstValueFrom, throwError } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class PortabilidadeService {
@@ -13,10 +13,17 @@ export class PortabilidadeService {
     const url = `${this.apiBase}/listar-declaracoes`;
     const body = { chaveUnica };
 
-    type DeclResponse = { tipoDeclaracoes: Array<{ declaracoes: Array<{ idDeclaracao: string }> }> };
+    type DeclResponse = { tipoDeclaracoes: Array<{ declaracoes: Array<{ idDeclaracao: string }> }>; mensagem?: string };
 
     const resp = await firstValueFrom(
-      this.http.post<DeclResponse>(url, body)
+      this.http.post<DeclResponse>(url, body).pipe(
+        catchError((error: HttpErrorResponse) => {
+          if (error.status === 404) {
+            return throwError(() => new Error('Beneficiário não encontrado'));
+          }
+          return throwError(() => error);
+        })
+      )
     );
     const tipo = resp?.tipoDeclaracoes?.[0];
     const decl = tipo?.declaracoes?.[0];
@@ -27,9 +34,16 @@ export class PortabilidadeService {
     const url = `${this.apiBase}/declaracao-pdf`;
     const body = { chaveUnica, idDeclaracao };
 
-    type PdfResponse = { base64?: string };
+    type PdfResponse = { base64?: string; mensagem?: string };
     const resp = await firstValueFrom(
-      this.http.post<PdfResponse>(url, body)
+      this.http.post<PdfResponse>(url, body).pipe(
+        catchError((error: HttpErrorResponse) => {
+          if (error.status === 404) {
+            return throwError(() => new Error('Beneficiário não encontrado'));
+          }
+          return throwError(() => error);
+        })
+      )
     );
     return resp?.base64 ?? null;
   }
